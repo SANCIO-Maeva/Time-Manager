@@ -18,7 +18,7 @@ const PORT = process.env.PORT;
 setupSwagger(app);
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
+  origin: ["http://localhost:5173", "http://127.0.0.1:5173", "https://time-managerr.netlify.app"],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "x-custom-header"],
   credentials: true,
@@ -26,10 +26,8 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-app.use(cors({
-  origin: 'https://time-managerr.netlify.app', // Ton URL Netlify exacte
-  credentials: true
-}));app.use(express.json());
+app.use(cors(corsOptions));
+app.use(express.json());
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/clocks", clocksRoutes);
