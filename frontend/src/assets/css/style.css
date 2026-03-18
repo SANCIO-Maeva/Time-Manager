@@ -1,0 +1,248 @@
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Reset margins and paddings for all elements */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  min-width: 320px;
+  background-color: #242424;
+  /* remove display: flex and place-items here */
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+}
+
+/* Custom width utilities */
+.w-10 {
+  width: 10% !important;
+}
+
+.w-33 {
+  width: 33% !important;
+}
+
+.w-66 {
+  width: 66% !important;
+}
+
+.w-80 {
+  width: 80% !important;
+}
+
+/* src/assets/custom-bootstrap.css */
+.bg-blue-primary {
+  background-color: #2b4570 !important;
+}
+
+.text-blue-primary {
+  color: #1F2D5C !important;
+}
+
+.bg-blue-sky {
+  background-color: #78a1bb !important;
+}
+
+/* FIX CONTRASTE: était #78a1bb (trop clair sur fond blanc) */
+.text-blue-sky {
+  color: #1F2D5C !important;
+}
+
+/* BUTTON COLOR CUSTOMIZATION - Consistent branding */
+.btn-primary {
+  background-color: #1b93b1 !important;
+  border-color: #1b93b1 !important;
+  color: white !important;
+}
+
+.btn-primary:hover {
+  background-color: #157a93 !important;
+  border-color: #157a93 !important;
+}
+
+.btn-primary:active,
+.btn-primary:focus {
+  background-color: #0f5a73 !important;
+  border-color: #0f5a73 !important;
+}
+
+.btn-outline-primary {
+  color: #1b93b1 !important;
+  border-color: #1b93b1 !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: #1b93b1 !important;
+  border-color: #1b93b1 !important;
+  color: white !important;
+}
+
+.btn-outline-primary:active,
+.btn-outline-primary:focus {
+  background-color: #157a93 !important;
+  border-color: #157a93 !important;
+  color: white !important;
+}
+
+/* Softer red for danger buttons */
+/* FIX CONTRASTE: rouge plus foncé pour texte blanc */
+.btn-danger {
+  background-color: #B84035 !important;
+  border-color: #B84035 !important;
+  color: white !important;
+}
+
+.btn-danger:hover {
+  background-color: #A5382E !important;
+  border-color: #A5382E !important;
+}
+
+.btn-danger:active,
+.btn-danger:focus {
+  background-color: #8F3027 !important;
+  border-color: #8F3027 !important;
+}
+
+/* FIX CONTRASTE: outline danger plus foncé (texte sur fond blanc) */
+.btn-outline-danger {
+  color: #B84035 !important;
+  border-color: #B84035 !important;
+}
+
+.btn-outline-danger:hover {
+  background-color: #B84035 !important;
+  border-color: #B84035 !important;
+  color: white !important;
+}
+
+.btn-outline-danger:active,
+.btn-outline-danger:focus {
+  background-color: #A5382E !important;
+  border-color: #A5382E !important;
+  color: white !important;
+}
+
+/* Secondary buttons - light gray, neutral */
+.btn-secondary {
+  background-color: #e8e8e8 !important;
+  border-color: #e8e8e8 !important;
+  color: #333 !important;
+}
+
+.btn-secondary:hover {
+  background-color: #d0d0d0 !important;
+  border-color: #d0d0d0 !important;
+}
+
+.btn-secondary:active,
+.btn-secondary:focus {
+  background-color: #b8b8b8 !important;
+  border-color: #b8b8b8 !important;
+}
+
+/* FIX CONTRASTE: teal plus foncé pour le texte sur fond blanc */
+.btn-outline-secondary {
+  color: #0f5a73 !important;
+  border-color: #0f5a73 !important;
+  background-color: white !important;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #f5f5f5 !important;
+  border-color: #0f5a73 !important;
+  color: #0f5a73 !important;
+}
+
+/* Light buttons - for close/dismiss */
+.btn-light {
+  background-color: #f8f9fa !important;
+  border-color: #f8f9fa !important;
+  color: #333 !important;
+}
+
+.btn-light:hover {
+  background-color: #e8e9ea !important;
+  border-color: #e8e9ea !important;
+}
+
+/* Success buttons - use the brand blue instead */
+.btn-success {
+  background-color: #1b93b1 !important;
+  border-color: #1b93b1 !important;
+  color: white !important;
+}
+
+.btn-success:hover {
+  background-color: #157a93 !important;
+  border-color: #157a93 !important;
+}
+
+.btn-success:active,
+.btn-success:focus {
+  background-color: #0f5a73 !important;
+  border-color: #0f5a73 !important;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  a:hover {
+    color: #747bff;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+}

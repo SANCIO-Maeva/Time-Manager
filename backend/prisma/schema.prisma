@@ -1,0 +1,145 @@
+generator client {
+  provider        = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Clocks {
+  idClock     Int       @id @default(autoincrement())
+  userId      Int
+  clockIn     DateTime
+  createdAt   DateTime  @default(now())
+  clockOut    DateTime?
+  hoursWorked Float?
+  late        Boolean   @default(false)
+  earlyLeave  Boolean   @default(false)
+  shortDay    Boolean   @default(false)
+  Users       Users     @relation(fields: [userId], references: [idUser])
+
+  @@index([userId], map: "Clocks_userId_fkey")
+}
+
+model Plannings {
+  idPlanning Int       @id @default(autoincrement())
+  userId     Int
+  date       DateTime?
+  dayOfWeek  Int?      // 0-6 for template plannings (Mon-Sun)
+  startTime  DateTime
+  endTime    DateTime
+  isTemplate Boolean   @default(false) // true = active template, false = historical record
+  Users      Users     @relation(fields: [userId], references: [idUser])
+
+  @@unique([userId, dayOfWeek, isTemplate], name: "unique_template_per_day")
+  @@index([userId], map: "Plannings_userId_fkey")
+}
+
+model Reports {
+  idReport  Int      @id @default(autoincrement())
+  kpi       String
+  startDate DateTime
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  userId    Int
+  teamId    Int
+  Teams     Teams    @relation(fields: [teamId], references: [idTeam])
+  Users     Users    @relation(fields: [userId], references: [idUser])
+
+  @@index([teamId], map: "Reports_teamId_fkey")
+  @@index([userId], map: "Reports_userId_fkey")
+}
+
+// KPIs: allow managers to define KPIs for lateness/hours/etc. Target can be a user or a team
+model Kpi {
+  id            Int      @id @default(autoincrement())
+  name          String
+  metric        String   // 'lateness' | 'hours' | 'custom'
+  scope         String   // 'user' | 'team'
+  targetUserId  Int?
+  targetTeamId  Int?
+  params        Json?    // optional JSON parameters (thresholds, aggregation rules)
+  createdBy     Int
+  createdAt     DateTime @default(now())
+
+  Users         Users    @relation(fields: [createdBy], references: [idUser])
+
+  @@index([createdBy], map: "Kpi_createdBy_fkey")
+  @@index([targetUserId], map: "Kpi_targetUserId_idx")
+  @@index([targetTeamId], map: "Kpi_targetTeamId_idx")
+}
+
+model Roles {
+  idRole    Int         @id @default(autoincrement())
+  name      String      @unique
+  UserRoles UserRoles[]
+}
+
+model TeamUser {
+  id     Int   @id @default(autoincrement())
+  teamId Int
+  userId Int
+  Teams  Teams @relation(fields: [teamId], references: [idTeam])
+  Users  Users @relation(fields: [userId], references: [idUser])
+
+  @@unique([teamId, userId])
+  @@index([userId], map: "TeamUser_userId_fkey")
+}
+
+model Teams {
+  idTeam      Int        @id @default(autoincrement())
+  name        String     @unique
+  description String?
+  managerId   Int
+  Reports     Reports[]
+  TeamUser    TeamUser[]
+  Users       Users      @relation(fields: [managerId], references: [idUser])
+
+  @@index([managerId], map: "Teams_managerId_fkey")
+}
+
+model UserRoles {
+  idUserRole Int   @id @default(autoincrement())
+  userId     Int
+  roleId     Int
+  Roles      Roles @relation(fields: [roleId], references: [idRole])
+  Users      Users @relation(fields: [userId], references: [idUser])
+
+  @@unique([userId, roleId])
+  @@index([roleId], map: "UserRoles_roleId_fkey")
+}
+
+model Users {
+  idUser    Int         @id @default(autoincrement())
+  email     String      @unique
+  firstname String
+  lastname  String
+  password  String
+  phone     Int
+  profile   String?
+  latenessCount Int     @default(0)
+  latenessMonth String?
+  Clocks    Clocks[]
+  Plannings Plannings[]
+  Reports   Reports[]
+  TeamUser  TeamUser[]
+  Teams     Teams[]
+  UserRoles UserRoles[]
+  Vacations Vacations[]
+  Kpi       Kpi[]
+}
+
+model Vacations {
+  idVacation Int      @id @default(autoincrement())
+  userId     Int
+  startDate  DateTime
+  endDate    DateTime
+  status     String   @default("pending")
+  createdAt  DateTime @default(now())
+  Users      Users    @relation(fields: [userId], references: [idUser])
+
+  @@index([userId], map: "Vacations_userId_fkey")
+}
