@@ -37,6 +37,10 @@ app.use("/roles", rolesRoutes);
 app.use("/reports", reportsRoutes);
 app.use("/kpis", kpisRoutes);
 
+prisma.$connect()
+  .then(() => console.log("✅ Connexion database réussie !"))
+  .catch((err) => console.error("❌ Erreur database détaillée :", err));
+  
 app.listen(PORT || 3000, '0.0.0.0', () => {
   console.log(`API running on port ${PORT || 3000}`);
 });
