@@ -10,7 +10,9 @@ import rolesRoutes from "./routes/Roles.js";
 import reportsRoutes from "./routes/Reports.js";
 import kpisRoutes from "./routes/Kpis.js";
 import { setupSwagger } from './config/swagger.js';
+import { PrismaClient } from '@prisma/client';
 
+const prisma = new PrismaClient();
 dotenv.config();
 const app = express();
 const PORT = process.env.PORT;
@@ -40,7 +42,7 @@ app.use("/kpis", kpisRoutes);
 prisma.$connect()
   .then(() => console.log("✅ Connexion database réussie !"))
   .catch((err) => console.error("❌ Erreur database détaillée :", err));
-  
+
 app.listen(PORT || 3000, '0.0.0.0', () => {
   console.log(`API running on port ${PORT || 3000}`);
 });
