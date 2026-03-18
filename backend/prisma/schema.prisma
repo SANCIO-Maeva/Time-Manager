@@ -5,7 +5,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -21,7 +21,7 @@ model Clocks {
   shortDay    Boolean   @default(false)
   Users       Users     @relation(fields: [userId], references: [idUser])
 
-  @@index([userId], map: "Clocks_userId_fkey")
+  @@index([userId], map: "Clocks_userId_idx")
 }
 
 model Plannings {
@@ -35,7 +35,7 @@ model Plannings {
   Users      Users     @relation(fields: [userId], references: [idUser])
 
   @@unique([userId, dayOfWeek, isTemplate], name: "unique_template_per_day")
-  @@index([userId], map: "Plannings_userId_fkey")
+  @@index([userId], map: "Plannings_userId_idx")
 }
 
 model Reports {
@@ -49,8 +49,8 @@ model Reports {
   Teams     Teams    @relation(fields: [teamId], references: [idTeam])
   Users     Users    @relation(fields: [userId], references: [idUser])
 
-  @@index([teamId], map: "Reports_teamId_fkey")
-  @@index([userId], map: "Reports_userId_fkey")
+  @@index([teamId], map: "Reports_teamId_idx")
+  @@index([userId], map: "Reports_userId_idx")
 }
 
 // KPIs: allow managers to define KPIs for lateness/hours/etc. Target can be a user or a team
@@ -67,7 +67,7 @@ model Kpi {
 
   Users         Users    @relation(fields: [createdBy], references: [idUser])
 
-  @@index([createdBy], map: "Kpi_createdBy_fkey")
+  @@index([createdBy], map: "Kpi_createdBy_idx")
   @@index([targetUserId], map: "Kpi_targetUserId_idx")
   @@index([targetTeamId], map: "Kpi_targetTeamId_idx")
 }
@@ -86,7 +86,7 @@ model TeamUser {
   Users  Users @relation(fields: [userId], references: [idUser])
 
   @@unique([teamId, userId])
-  @@index([userId], map: "TeamUser_userId_fkey")
+  @@index([userId], map: "TeamUser_userId_idx")
 }
 
 model Teams {
@@ -98,7 +98,7 @@ model Teams {
   TeamUser    TeamUser[]
   Users       Users      @relation(fields: [managerId], references: [idUser])
 
-  @@index([managerId], map: "Teams_managerId_fkey")
+  @@index([managerId], map: "Teams_managerId_idx")
 }
 
 model UserRoles {
@@ -109,7 +109,7 @@ model UserRoles {
   Users      Users @relation(fields: [userId], references: [idUser])
 
   @@unique([userId, roleId])
-  @@index([roleId], map: "UserRoles_roleId_fkey")
+  @@index([roleId], map: "UserRoles_roleId_idx")
 }
 
 model Users {
@@ -141,5 +141,5 @@ model Vacations {
   createdAt  DateTime @default(now())
   Users      Users    @relation(fields: [userId], references: [idUser])
 
-  @@index([userId], map: "Vacations_userId_fkey")
+  @@index([userId], map: "Vacations_userId_idx")
 }

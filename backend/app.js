@@ -26,8 +26,10 @@ const corsOptions = {
   optionsSuccessStatus: 204,
 };
 
-app.use(cors(corsOptions));
-app.use(express.json());
+app.use(cors({
+  origin: 'https://time-managerr.netlify.app', // Ton URL Netlify exacte
+  credentials: true
+}));app.use(express.json());
 app.use("/users", userRoutes);
 app.use("/auth", authRoutes);
 app.use("/clocks", clocksRoutes);
