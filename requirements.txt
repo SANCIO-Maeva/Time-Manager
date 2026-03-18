@@ -20,7 +20,6 @@ jsonwebtoken == 9.0.2
 
 # ORM et base de données
 
-@prisma/client == 5.18.0
 prisma == 5.18.0
 mariadb == 10.6.17
 
