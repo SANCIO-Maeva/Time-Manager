@@ -61,7 +61,15 @@ export default {
       });
     } catch (error) {
       console.error("Erreur dans login:", error);
-      return res.status(500).json({ error: "Erreur serveur" });
+
+      // Avoid leaking internal error details in production responses.
+      // If you need to return debug details in development, toggle via NODE_ENV.
+      const response = { error: "Erreur serveur" };
+      if (process.env.NODE_ENV === "development") {
+        response.details = error.message;
+      }
+
+      return res.status(500).json(response);
     }
   },
 
