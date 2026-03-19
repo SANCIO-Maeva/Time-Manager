@@ -16,14 +16,14 @@
       <ul class="nav text-black fw-semibold flex-column">
 
         <!-- ADMIN SIDENAV -->
-          <li v-if="user && user.profile === 'admin'" class="mb-2">
+          <li v-if="userRole === 'admin'" class="mb-2">
             <router-link to="/admin/users" class="nav-link" :class="{ active: isActive('/admin/users') }">
               <div class="d-flex align-items-center gap-3">
                 <span>Users</span>
               </div>
             </router-link>
           </li>
-          <li v-if="user && user.profile === 'admin'" class="mb-2">
+          <li v-if="userRole === 'admin'" class="mb-2">
             <router-link to="/admin/teams" class="nav-link" :class="{ active: isActive('/admin/teams') }">
               <div class="d-flex align-items-center gap-3">
                 <span>Teams</span>
@@ -34,7 +34,7 @@
 
         <!-- REGULAR SIDENAV -->
           <!-- DASHBOARD -->
-          <li v-if="!user || user.profile !== 'admin'" class="mb-2">
+          <li v-if="userRole !== 'admin'" class="mb-2">
             <router-link to="/" class="nav-link" :class="{ active: isActive('/') }">
               <div class="d-flex align-items-center gap-3">
                 <svg class="w-10" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -61,7 +61,7 @@
           </li>
 
           <!-- PROFILE -->
-          <li v-if="!user || user.profile !== 'admin'" class="mb-2">
+          <li v-if="userRole !== 'admin'" class="mb-2">
             <router-link to="/profile" class="nav-link" :class="{ active: isActive('/profile') }">
               <div class="d-flex align-items-center gap-3">
                 <svg class="w-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -88,7 +88,7 @@
             </router-link>
           </li>
 
-          <li v-if="!user || user.profile !== 'admin'" class="nav-item mb-2">
+          <li v-if="userRole !== 'admin'" class="nav-item mb-2">
             <router-link
               to="/planning"
               class="nav-link"
@@ -109,7 +109,7 @@
           </li>
 
           <!-- TEAMS -->
-          <li v-if="!user || user.profile !== 'admin'" class="mb-2">
+          <li v-if="userRole !== 'admin'" class="mb-2">
             <router-link to="/teams" class="nav-link" :class="{ active: isActive('/teams') }">
               <div class="d-flex align-items-center gap-3">
                 <svg class="w-10" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" fill="#1b93b1">
@@ -126,7 +126,7 @@
         </li>
 
         <!-- KPIs (Manager only) -->
-        <li v-if="user && user.profile === 'manager'" class="mb-2">
+        <li v-if="userRole === 'manager'" class="mb-2">
           <router-link to="/kpis" class="nav-link" :class="{ active: isActive('/kpis') }">
             <div class="d-flex align-items-center gap-3">
               <svg class="w-10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -170,7 +170,7 @@
       <button class="btn btn-sm btn-outline-secondary" @click="open = !open">☰</button>
     </div>
     <ul v-if="open" class="nav flex-column mt-2">
-      <template v-if="user && user.profile === 'admin'">
+      <template v-if="userRole === 'admin'">
         <li class="nav-item"><router-link to="/admin/users" class="nav-link">Users</router-link></li>
         <li class="nav-item"><router-link to="/admin/teams" class="nav-link">Teams</router-link></li>
       </template>
@@ -185,13 +185,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
 const open = ref(false)
 const route = useRoute()
 const router = useRouter()
 const user = ref(null)
+
+const userRole = computed(() => (user.value?.role || user.value?.profile || '').toString().toLowerCase());
 
 onMounted(() => {
   const storedUser = JSON.parse(localStorage.getItem('user'))

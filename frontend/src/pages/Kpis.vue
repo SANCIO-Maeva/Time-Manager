@@ -219,7 +219,8 @@ export default {
         const teamsRes = await teamsService.getAllTeams();
         availableTeams.value = teamsRes;
 
-        if (currentUser && currentUser.profile === 'manager') {
+        const currentRole = (currentUser?.role || currentUser?.profile || '').toString().toLowerCase();
+        if (currentUser && currentRole === 'manager') {
           const mgrTeams = await teamsService.getTeamsByUserId(currentUser.id);
           const uniqueUsers = new Map();
 

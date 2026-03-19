@@ -414,7 +414,7 @@ const toast = useToast();
 
 // Données réactives
 const teams = ref([]);
-const userRole = ref('employee'); // Défini dynamiquement dans fetchTeams() selon user.profile
+const userRole = ref('employee'); // Défini dynamiquement dans fetchTeams() selon user.role
 const selectedTeam = ref(null);
 const selectedMemberView = ref(null);
 const selectedMemberEdit = ref(null);
@@ -433,10 +433,10 @@ const fetchTeams = async () => {
   try {
     const user = JSON.parse(localStorage.getItem('user'));
     if (user && user.id) {
-      const profile = (user.profile || '').toString().toLowerCase();
+      const role = (user.role || user.profile || '').toString().toLowerCase();
 
-      if (profile === 'manager') userRole.value = 'manager';
-      else if (profile === 'admin') userRole.value = 'admin';
+      if (role === 'manager') userRole.value = 'manager';
+      else if (role === 'admin') userRole.value = 'admin';
       else userRole.value = 'employee';
 
       const data = await teamsService.getTeamsByUserId(user.id);
@@ -602,7 +602,7 @@ const saveMemberChanges = async () => {
     if (!selectedMemberEdit.value) return;
 
     const currentUser = JSON.parse(localStorage.getItem('user')) || {};
-    const currentRole = (currentUser.profile || '').toString().toLowerCase();
+    const currentRole = (currentUser.role || currentUser.profile || '').toString().toLowerCase();
     const targetRole = (selectedMemberEdit.value.role || '').toString().toLowerCase();
     if (
       currentRole === 'manager' &&

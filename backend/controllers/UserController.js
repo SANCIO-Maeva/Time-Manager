@@ -51,6 +51,18 @@ function normalizeProfile(profile) {
   return (profile || "").toString().toLowerCase();
 }
 
+// Helper: Remove password from user object
+function excludePassword(user) {
+  if (!user) return user;
+  const { password, ...rest } = user;
+  return rest;
+}
+
+// Helper: Remove password from multiple users
+function excludePasswordFromMultiple(users) {
+  return users.map(user => excludePassword(user));
+}
+
 async function canAccessTargetUser({ requesterId, requesterProfile, targetId }) {
   if (requesterProfile === "admin") return { allowed: true, managerCheck: false };
   if (requesterId === targetId) return { allowed: true, managerCheck: false };
@@ -137,7 +149,7 @@ export default {
         console.error("Erreur lors de la création des plannings par défaut :", err);
       }
 
-      return res.status(201).json({ user: newUser });
+      return res.status(201).json({ user: excludePassword(newUser) });
     } catch (error) {
       console.error("createUser error:", error);
       if (error?.name === "ZodError") return res.status(400).json({ errors: error.errors });
@@ -161,7 +173,7 @@ export default {
 
       if (requesterProfile === "admin") {
         const users = await prisma.users.findMany();
-        return res.status(200).json(users);
+        return res.status(200).json(excludePasswordFromMultiple(users));
       }
 
       if (requesterProfile === "manager") {
@@ -173,11 +185,11 @@ export default {
             ],
           },
         });
-        return res.status(200).json(users);
+        return res.status(200).json(excludePasswordFromMultiple(users));
       }
 
       const self = await prisma.users.findUnique({ where: { idUser: requesterId } });
-      return res.status(200).json([self]);
+      return res.status(200).json([excludePassword(self)]);
     } catch (error) {
       console.error("getAllUsers error:", error);
       return res.status(500).json({ error: "Erreur serveur." });
@@ -213,7 +225,7 @@ export default {
 
       try {
         const access = await canAccessTargetUser({ requesterId, requesterProfile, targetId });
-        if (access.allowed) return res.json(user);
+        if (access.allowed) return res.json(excludePassword(user));
       } catch (err) {
         console.error("Error during manager membership check (getUserById):", err);
         return res
@@ -278,7 +290,7 @@ export default {
         data: updatedData,
       });
 
-      return res.json(updatedUser);
+      return res.json(excludePassword(updatedUser));
     } catch (error) {
       console.error("updateUser error:", error);
       return res.status(500).json({ error: "Erreur lors de la mise à jour." });

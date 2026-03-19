@@ -37,6 +37,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isLoggedIn = !!localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const role = (user.role || user.profile || '').toString().toLowerCase();
 
   if (to.meta.requiresAuth && !isLoggedIn) {
     return next('/login');
@@ -47,11 +48,11 @@ router.beforeEach((to, from, next) => {
   }
 
   // Admin-only pages
-  if (to.meta.adminOnly && user.profile !== 'admin') {
+  if (to.meta.adminOnly && role !== 'admin') {
     return next('/');
   }
 
-  if (to.meta.managerOnly && !(user.profile === 'manager' || user.profile === 'admin')) {
+  if (to.meta.managerOnly && !(role === 'manager' || role === 'admin')) {
     return next('/');
   }
 
