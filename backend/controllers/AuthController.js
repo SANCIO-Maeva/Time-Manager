@@ -31,7 +31,15 @@ export default {
       }
 
       const { email, password } = validation.data;
-      const user = await prisma.users.findFirst({ where: { email } });
+      const user = await prisma.users.findFirst({ where: { email },
+      include: {
+        UserRoles: {
+          include: {
+            Roles: true,
+          },
+        },
+      },
+      });
       if (!user) {
         return res.status(404).json({ error: "Utilisateur introuvable." });
       }
@@ -41,8 +49,10 @@ export default {
         return res.status(401).json({ error: "Mot de passe incorrect." });
       }
 
+      const userRoleName = user.UserRoles?.[0]?.Roles?.name || "user";
+
       const token = jwt.sign(
-        { id: user.idUser, email: user.email, profile: user.profile },
+        { id: user.idUser, email: user.email, profile: user.profile, role: userRoleName },
         SECRET_KEY,
         { expiresIn: "2h" }
       );
