@@ -68,6 +68,7 @@ export default {
           email: user.email,
           phone: user.phone,
           profile: user.profile,
+          role: userRoleName,
         },
       });
     } catch (error) {
