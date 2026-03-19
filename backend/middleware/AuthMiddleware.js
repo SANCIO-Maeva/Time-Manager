@@ -29,7 +29,7 @@ export const verifyToken = (req, res, next) => {
 
 // Autorise uniquement certains rôles
 export const authorizeProfile = (allowedProfiles) => (req, res, next) => {
-  if (!allowedProfiles.includes(req.user.profile)) {
+  if (!allowedProfiles.includes(req.user.role)) {
     return res.status(403).json({ message: 'Accès refusé : rôle insuffisant' });
   }
   next();
