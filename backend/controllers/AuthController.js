@@ -31,7 +31,8 @@ export default {
       }
 
       const { email, password } = validation.data;
-      const user = await prisma.users.findFirst({ where: { email },
+      const user = await prisma.users.findFirst({
+      where: { email },
       include: {
         UserRoles: {
           include: {
